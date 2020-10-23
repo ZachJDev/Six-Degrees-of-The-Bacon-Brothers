@@ -7,15 +7,15 @@ class SixDegrees extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currrentNode: {},
+      currentNode: {},
       nodeGraph : new Graph(),
       initialNode : {},
       hasStarted :false,
-      target: {},
       startAlbum : 'Blonde on Blonde',
       startArtist : 'Bob Dylan',
       targetAlbum : 'Believe',
-      targetArtist : 'Cher'
+      targetArtist : 'Cher',
+      targetNode: {},
     };
   }
 
@@ -29,20 +29,23 @@ class SixDegrees extends Component {
     promises.push(fetch(`/album/${startAlbum}?artist=${startArtist}`));
     promises.push(fetch(`/album/${targetAlbum}?artist=${targetArtist}`));
 
-    Promise.all(promises).then(prs => {
+    Promise.all(promises)
+    .then(prs => {
       return prs.map(res => {
         return res.json()
       })
     })
+    .then(jsons => {
+      return Promise.all(jsons)
+    })
     .then(als => {
-      // Setup the initial game state
+      this.setState({currentNode: als[0], targetNode: als[1], hasStarted: true}, () => console.log(this.state));
 
     })
 
   }
 
   handleFormUpdate = (event) => {
-    console.log(event.target, event.value)
     this.setState({[event.target.name]:[event.target.value]})
   }
 
@@ -62,15 +65,14 @@ class SixDegrees extends Component {
 
   }
 
-  //
 
   render() {
-   let {startAlbum, startArtist, targetAlbum, targetArtist, currentNode} = this.state
+   let {startAlbum, startArtist, targetAlbum, targetArtist, currentNode, toptags} = this.state
 
     return (
       <div>
       {this.state.hasStarted ? 
-      <Current handleSearch={this.handleSearch} data={this.state.currentNode}/>
+      <Current handleSearch={this.handleSearch} {...currentNode.album} type={currentNode.type}/>
         : 
         <FirstSearch startAlbum={startAlbum} startArtist={startArtist} targetAlbum={targetAlbum} targetArtist={targetArtist} handleStart={this.handleStart} handleFormUpdate={this.handleFormUpdate} handleSubmit={this.handleInitialSubmit}/>
       }

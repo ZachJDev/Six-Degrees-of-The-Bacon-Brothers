@@ -12,19 +12,19 @@ export default class Current extends Component {
         this.props.handleSearch(source, to)
     }
     render() {
-        let {data} = this.props
-        // console.log('data:', data.name)
+       let {artist, name, tags} = this.props
+        console.log(this.props.tags )
         return (
             <div>
-                {data.artist ? 
-                <Artist artist={data.artist} handleSearch={this.handleSearch}/>
+                {artist ? 
+                <Artist artist={artist} handleSearch={this.handleSearch}/>
                 : null
                 }
-                {data.name ?
-                <Album album={data.name} handleSearch={this.handleSearch}/>
+                {name ?
+                <Album album={name} handleSearch={this.handleSearch}/>
                 : null
-                }
-                <Tags tags={data.tags.tag} handleSearch={this.handleSearch}/>
+                }{ tags ?
+                <Tags tags={tags} handleSearch={this.handleSearch}/> : null}
             </div>
         )
     }
