@@ -39,7 +39,7 @@ class SixDegrees extends Component {
       return Promise.all(jsons)
     })
     .then(als => {
-      this.setState({currentNode: als[0], targetNode: als[1], hasStarted: true}, () => console.log(this.state));
+      this.setState({currentNode: als[0], targetNode: als[1], hasStarted: true});
 
     })
 
@@ -50,7 +50,6 @@ class SixDegrees extends Component {
   }
 
   handleSearch = (searchString) => {
-    console.log(searchString)
     this.handleSearchUpdate(fetch(searchString));
   };
 
@@ -58,7 +57,10 @@ class SixDegrees extends Component {
     search.then(res => res.json())
     .then(res => {
       console.log(res)
-        
+      // TODO add to graph
+
+      // TODO set state correctly
+       this.setState({currentNode: res}) 
      }) 
   }
 
@@ -69,7 +71,7 @@ class SixDegrees extends Component {
 
   render() {
    let {startAlbum, startArtist, targetAlbum, targetArtist, currentNode, toptags} = this.state
-
+    console.log(currentNode.type)
     return (
       <div>
       {this.state.hasStarted ? 
