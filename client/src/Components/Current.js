@@ -8,20 +8,20 @@ export default class Current extends Component {
         super(props);
     }
 
-    handleSearch = (source, to) => {
-        this.props.handleSearch(source, to)
+    handleSearch = (searchUrl) => {
+        this.props.handleSearch(searchUrl)
     }
     render() {
-       let {artist, name, tags} = this.props
+       let {artist, name,  tags} = this.props
         console.log(this.props.tags )
         return (
             <div>
                 {artist ? 
-                <Artist artist={artist} handleSearch={this.handleSearch}/>
+                <Artist artist={artist} album={name} handleSearch={this.handleSearch}/>
                 : null
                 }
                 {name ?
-                <Album album={name} handleSearch={this.handleSearch}/>
+                <Album album={name} artist={artist} handleSearch={this.handleSearch}/>
                 : null
                 }{ tags ?
                 <Tags tags={tags} handleSearch={this.handleSearch}/> : null}

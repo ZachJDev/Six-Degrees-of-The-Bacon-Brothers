@@ -50,6 +50,7 @@ class SixDegrees extends Component {
   }
 
   handleSearch = (searchString) => {
+    console.log(searchString)
     this.handleSearchUpdate(fetch(searchString));
   };
 

@@ -10,6 +10,7 @@ const API = require('../lastFmAPI.json');
 */
 
 router.get('/:tag', (req, res, next) => {
+    console.log("handling Tag Search")
     req.reqType = 'tag';
     req.promises = [];
     req.promises.push(fetch(`https://ws.audioscrobbler.com/2.0/?method=tag.getInfo&tag=${req.params.tag}&api_key=${API.key}&format=json`))

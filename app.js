@@ -29,6 +29,7 @@ app.use('/tag', tagRoute);
 
 // Promise-Resolver Middleware
 app.use('/', (req, res, next) => {
+  if(req.promises.length > 0){
     Promise.all(req.promises)
     .then((pr) => {
       return Promise.all(
@@ -42,6 +43,9 @@ app.use('/', (req, res, next) => {
         req.data = info;
       next();
     });
+  } else {
+    console.log("empty")
+  }
 })
 
 // Final response-sender
