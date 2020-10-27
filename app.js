@@ -74,7 +74,6 @@ app.use('/', (req, res, next) => {
 
 // Final response-sender
 app.use('/', (req, res) => {
-  console.log(req.normalized)
     res.json(Object.assign({type: req.reqType}, req.normalized))
 })
 
