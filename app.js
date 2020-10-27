@@ -57,8 +57,9 @@ app.use('/', (req, res, next) => {
   let albums = null;
   if(req.reqType !== 'album'){
     artists = req.data[3].similarartists || req.data[3].topartists;
-    albums =  req.data[2].topalbums ||  req.data[2].albums
+    albums =  req.data[2].topalbums ||  req.data[1].albums
   } 
+  console.log(req.data[1])
 
   // req.data is an array of the resolved promises from
   // the initial fetches. Below I extract the data I'm looking
