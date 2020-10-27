@@ -51,24 +51,23 @@ app.use('/', (req, res, next) => {
 })
 
 app.use('/', (req, res, next) => {
-  // if(req.reqType === 'tag') console.log(req.data[2])
-  if(req.reqType === 'artist') console.log(req.data[1].topalbums)
-
-  // album responses do not include any artist data. This little construction
-  // checks whether or not the request is for an album, and if it is NOT will
-  // set artists equal to either the artist or tag response.
-  let artists = req.reqType !== 'album' ? 
-  req.data[3].similarartists || req.data[3].topartists 
-  : null
+  // Handles artists and albums, as they do not appear in every
+  // request type.
+  let artists = null;
+  let albums = null;
+  if(req.reqType !== 'album'){
+    artists = req.data[3].similarartists || req.data[3].topartists;
+    albums =  req.data[2].topalbums ||  req.data[2].albums
+  } 
 
   // req.data is an array of the resolved promises from
   // the initial fetches. Below I extract the data I'm looking
   // for from the correct spot in the array.
    req.normalized = {
     info: req.data[0].tag || req.data[0].artist || req.data[0].album,
-    albums: req.data[1].topalbums ||  req.data[1].albums || null,
-    tags: req.data[2].toptags || req.data[2].similartags,
-    artists: artists,
+    tags: req.data[1].toptags || req.data[2].similartags,
+    albums,
+    artists
   }
   next();
 })
@@ -76,7 +75,7 @@ app.use('/', (req, res, next) => {
 // Final response-sender
 app.use('/', (req, res) => {
   console.log(req.normalized)
-    res.json(Object.assign({type: req.reqType}, ...req.data))
+    res.json(Object.assign({type: req.reqType}, req.normalized))
 })
 
 app.listen(PORT, () => {
