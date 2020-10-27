@@ -10,6 +10,7 @@ const API = require('../lastFmAPI.json')
 *  needs: artist(param)
 */
 router.get('/:artist', (req, res, next) => {
+    console.log('Handling Artist Search')
    req.reqType ='artist'
    req.promises = [];
    // artist info

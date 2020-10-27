@@ -29,27 +29,53 @@ app.use('/tag', tagRoute);
 
 // Promise-Resolver Middleware
 app.use('/', (req, res, next) => {
+  console.log(req.originalUrl)
   if(req.promises.length > 0){
     Promise.all(req.promises)
     .then((pr) => {
       return Promise.all(
-        pr.map((res) => {
-            console.log(res.status)
-            if(res.status === 200) return res.json();
+        pr.map((response) => {
+            console.log(response.status)
+            if(response.status === 200) return response.json();
         })
       );
     })
     .then((info) => {
         req.data = info;
-      next();
+        // console.log(info)
+        next();
     });
   } else {
     console.log("empty")
   }
 })
 
+app.use('/', (req, res, next) => {
+  // if(req.reqType === 'tag') console.log(req.data[2])
+  if(req.reqType === 'artist') console.log(req.data[1].topalbums)
+
+  // album responses do not include any artist data. This little construction
+  // checks whether or not the request is for an album, and if it is NOT will
+  // set artists equal to either the artist or tag response.
+  let artists = req.reqType !== 'album' ? 
+  req.data[3].similarartists || req.data[3].topartists 
+  : null
+
+  // req.data is an array of the resolved promises from
+  // the initial fetches. Below I extract the data I'm looking
+  // for from the correct spot in the array.
+   req.normalized = {
+    info: req.data[0].tag || req.data[0].artist || req.data[0].album,
+    albums: req.data[1].topalbums ||  req.data[1].albums || null,
+    tags: req.data[2].toptags || req.data[2].similartags,
+    artists: artists,
+  }
+  next();
+})
+
 // Final response-sender
 app.use('/', (req, res) => {
+  console.log(req.normalized)
     res.json(Object.assign({type: req.reqType}, ...req.data))
 })
 

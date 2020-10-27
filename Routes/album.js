@@ -9,6 +9,7 @@ const fetch = require("node-fetch");
 */
 
 router.get("/:album", (req, res, next) => {
+  console.log('Handling Album Search')
   req.reqType = "album";
   req.promises = [];
   // Get album info
